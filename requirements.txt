@@ -2,3 +2,6 @@ mlflow
 pandas
 numpy
 datasets
+urllib3
+mlflow
+dagshub

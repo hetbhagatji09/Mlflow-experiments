@@ -6,6 +6,10 @@ import pandas as pd
 import mlflow
 from mlflow.models import infer_signature
 import mlflow.sklearn
+from urllib.parse import urlparse
+
+import dagshub
+dagshub.init(repo_owner='hetbhagatji09', repo_name='Mlflow-experiments', mlflow=True)
 
 # Load the dataset
 california = fetch_california_housing()
@@ -13,8 +17,8 @@ california = fetch_california_housing()
 X = california.data
 y = california.target
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-alpha=0
-l1_ratio=1.0
+alpha=0.5
+l1_ratio=0.5
 # Create and train the linear regression model
 with mlflow.start_run():
     model = ElasticNet(alpha=alpha,l1_ratio=l1_ratio)
@@ -32,6 +36,10 @@ with mlflow.start_run():
     mlflow.log_metric("mse", mse)
     # mlflow.log_artifact(X)
     
+    remote_server_uri="https://dagshub.com/hetbhagatji09/Mlflow-experiments.mlflow"
+     #now mlruns folder directly created in dagshub uri
+    mlflow.set_tracking_uri(remote_server_uri)
+   
     
     #"model" is a artifacts path  where model is stored as pkl file 
     mlflow.sklearn.log_model(
